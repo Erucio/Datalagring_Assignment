@@ -84,7 +84,7 @@ namespace Datalagring_Assignment.Services
                 CustomerName = _errand.Customer.CustomerName,
                 Phone = _errand.Customer.Phone,
                 Email = _errand.Customer.Email,
-
+                Status = (ErrandStatus)_errand.Status
             };
         else
             return null!;
@@ -106,10 +106,12 @@ namespace Datalagring_Assignment.Services
 
         public static async Task DeleteAsync(int id)
         {
-            var _errand = await _context.Errands.Include(x => x.Customer).FirstOrDefaultAsync(x => x.Id == id);
+            var _errand = await _context.Errands.Include(x => x.Customer).FirstOrDefaultAsync(x => x.Id == id && x.Status == 3);
             if (_errand != null)
+            {
                 _context.Remove(_errand);
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
+            }
         }
 
     }

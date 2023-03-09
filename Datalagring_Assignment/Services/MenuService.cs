@@ -140,8 +140,15 @@ namespace Datalagring_Assignment.Services
 
             if (errand != null)
             {
-                await ErrandService.DeleteAsync(id);
-                Console.WriteLine("Errand Deleted");
+                if ((int)errand.Status == 3)
+                {
+                    await ErrandService.DeleteAsync(id);
+                    Console.WriteLine("Errand Deleted");
+                }
+                else
+                {
+                    Console.WriteLine("Errand Can Only Be Deleted Once It Has Been Completed");
+                }
             }
             else
             {
