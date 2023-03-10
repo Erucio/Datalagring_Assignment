@@ -1,5 +1,4 @@
-﻿
-using Datalagring_Assignment.Models.Entities;
+﻿using Datalagring_Assignment.Models.Entities;
 using Datalagring_Assignment.Models;
 using Datalagring_Assignment.Contexts;
 using Microsoft.EntityFrameworkCore;
@@ -51,32 +50,12 @@ namespace Datalagring_Assignment.Services
 
         public static async Task<IEnumerable<Errand>> GetAllAsync()
         {
-            var _errands = new List<Errand>();
-            foreach (var _errand in await _context.Errands.Include(x => x.Customer).ToListAsync())
-                _errands.Add(new Errand
-                { 
-                    Id = _errand.Id,
-                    Description = _errand.Description,
-                    ErrandDateTime = _errand.ErrandDateTime,
-                    CustomerName = _errand.Customer.CustomerName,
-                    Phone = _errand.Customer.Phone,
-                    Email = _errand.Customer.Email,
-                    Status = (ErrandStatus)_errand.Status
+            var _errands = await _context.Errands
+                .Include(e => e.Customer)
+                .Include(e => e.Comments)
+                .ToListAsync();
 
-                });
-            return _errands;
-        }
-
-
-
-
-     public static async Task<Errand> GetAsync(int id)
-    {
-        var _errand = await _context.Errands
-            .Include(x => x.Customer)
-            .FirstOrDefaultAsync(x => x.Id == id);
-        if (_errand != null)
-            return new Errand
+            return _errands.Select(_errand => new Errand
             {
                 Id = _errand.Id,
                 Description = _errand.Description,
@@ -84,11 +63,49 @@ namespace Datalagring_Assignment.Services
                 CustomerName = _errand.Customer.CustomerName,
                 Phone = _errand.Customer.Phone,
                 Email = _errand.Customer.Email,
-                Status = (ErrandStatus)_errand.Status
-            };
-        else
-            return null!;
-    }
+                Status = (ErrandStatus)_errand.Status,
+                Comments = _errand.Comments.Select(c => new CommentEntity
+                {
+                    Id = c.Id,
+                    Comment = c.Comment,
+                    CommentDateTime = c.CommentDateTime,
+                    ErrandId = c.ErrandId
+                }).ToList()
+            });
+        }
+
+
+
+
+        public static async Task<Errand> GetAsync(int id)
+        {
+            var _errand = await _context.Errands
+                .Include(x => x.Customer)
+                .Include(x => x.Comments)
+                .FirstOrDefaultAsync(x => x.Id == id);
+            if (_errand != null)
+                return new Errand
+                {
+                    Id = _errand.Id,
+                    Description = _errand.Description,
+                    ErrandDateTime = _errand.ErrandDateTime,
+                    CustomerName = _errand.Customer.CustomerName,
+                    Phone = _errand.Customer.Phone,
+                    Email = _errand.Customer.Email,
+                    Status = (ErrandStatus)_errand.Status,
+                    Comments = _errand.Comments.Select(c => new CommentEntity
+                    {
+                        Id = c.Id,
+                        Comment = c.Comment,
+                        CommentDateTime = c.CommentDateTime,
+                        ErrandId = c.ErrandId
+                    }).ToList()
+                };
+
+
+            else
+                return null!;
+        }
         public static async Task UpdateAsync(Errand errand)
         {
             var _errandEntity = await _context.Errands.Include(x => x.Customer).FirstOrDefaultAsync(x => x.Id == errand.Id);
@@ -113,6 +130,30 @@ namespace Datalagring_Assignment.Services
                 await _context.SaveChangesAsync();
             }
         }
+
+
+
+
+        // ADD COMMENT....
+        public static async Task AddCommentAsync(int errandId, string comment)
+        {
+            var _errandEntity = await _context.Errands.FindAsync(errandId);
+
+            if (_errandEntity != null)
+            {
+                var _commentEntity = new CommentEntity
+                {
+                    Comment = comment,
+                    CommentDateTime = DateTime.Now,
+                    Errand = _errandEntity
+                };
+
+                _context.Comments.Add(_commentEntity);
+                await _context.SaveChangesAsync();
+
+            }
+        }
+
 
     }
 

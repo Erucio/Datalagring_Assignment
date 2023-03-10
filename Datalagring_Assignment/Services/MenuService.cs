@@ -1,7 +1,4 @@
-﻿using Datalagring_Assignment.Services;
-using Datalagring_Assignment.Models;
-using Microsoft.EntityFrameworkCore;
-using Datalagring_Assignment.Contexts;
+﻿using Datalagring_Assignment.Models;
 using Datalagring_Assignment.Models.Entities;
 
 namespace Datalagring_Assignment.Services
@@ -51,11 +48,18 @@ namespace Datalagring_Assignment.Services
                     Console.WriteLine($"Errand Created: {errand.ErrandDateTime}");
                     Console.WriteLine($"Errand Status: {errand.Status}");
 
+                    if (errand.Comments.Any())
+                    {
+                        Console.WriteLine("Comments:");
+
+                        foreach (CommentEntity comment in errand.Comments)
+                        {
+                            Console.WriteLine($"\t{comment.Comment} \n  \t{comment.CommentDateTime}\n");
+                        }
+                    }
 
                     Console.WriteLine("");
-
                 }
-
             }
             else
             {
@@ -82,7 +86,19 @@ namespace Datalagring_Assignment.Services
                     Console.WriteLine($"Error Description: {errand.Description}");
                     Console.WriteLine($"Errand Created: {errand.ErrandDateTime}");
                     Console.WriteLine($"Errand Status: {errand.Status}");
-                }
+                    //Display Comments if there are any
+                    if (errand.Comments.Any())
+                    {
+                        Console.WriteLine("Comments:");
+
+                        foreach (CommentEntity comment in errand.Comments)
+                        {
+                            Console.WriteLine($"\t{comment.Comment} \n \t{comment.CommentDateTime} \n");
+                        }
+                    }
+
+                    Console.WriteLine("");
+                   }
                 else
                 {
                     Console.Clear();
@@ -107,6 +123,26 @@ namespace Datalagring_Assignment.Services
 
             if (errand != null)
             {
+                //Add comment?
+                Console.Clear();
+                Console.WriteLine("Would You Like To Add A Comment To This Errand? (Y/N)");
+
+                if (Console.ReadKey(true).Key == ConsoleKey.Y)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Enter Your Comment:");
+                    string comment = Console.ReadLine() ?? "";
+
+                    await ErrandService.AddCommentAsync(errand.Id, comment);
+
+                    Console.WriteLine("Comment Added...");
+                    Console.Clear() ;
+                }
+
+
+                //Change Status
+
+
                 Console.WriteLine("Select Errand Status:\n1. Not Started \n2. In Progress\n3. Completed");
 
                 Console.WriteLine("Status: ");
@@ -140,6 +176,8 @@ namespace Datalagring_Assignment.Services
 
             if (errand != null)
             {
+                //Only deletes Completed Errands
+
                 if ((int)errand.Status == 3)
                 {
                     await ErrandService.DeleteAsync(id);

@@ -37,7 +37,12 @@ namespace Datalagring_Assignment.Migrations
                     b.Property<DateTime>("CommentDateTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("ErrandId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ErrandId");
 
                     b.ToTable("Comments");
                 });
@@ -113,6 +118,17 @@ namespace Datalagring_Assignment.Migrations
                     b.ToTable("Status");
                 });
 
+            modelBuilder.Entity("Datalagring_Assignment.Models.Entities.CommentEntity", b =>
+                {
+                    b.HasOne("Datalagring_Assignment.Models.Entities.ErrandEntity", "Errand")
+                        .WithMany("Comments")
+                        .HasForeignKey("ErrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Errand");
+                });
+
             modelBuilder.Entity("Datalagring_Assignment.Models.Entities.ErrandEntity", b =>
                 {
                     b.HasOne("Datalagring_Assignment.Models.Entities.CustomerEntity", "Customer")
@@ -122,6 +138,11 @@ namespace Datalagring_Assignment.Migrations
                         .IsRequired();
 
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("Datalagring_Assignment.Models.Entities.ErrandEntity", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

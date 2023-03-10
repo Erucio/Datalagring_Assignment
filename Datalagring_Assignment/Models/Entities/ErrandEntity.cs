@@ -21,6 +21,6 @@ namespace Datalagring_Assignment.Models.Entities
 
         public int Status { get; set; }
 
-
+        public ICollection<CommentEntity> Comments { get; set; } = new List<CommentEntity>();
     }
 }

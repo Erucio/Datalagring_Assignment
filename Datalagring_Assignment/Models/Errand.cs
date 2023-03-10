@@ -15,10 +15,10 @@ namespace Datalagring_Assignment.Models
         public string Email { get; set; } = null!;
 
         public ErrandStatus Status { get; set; }
+        public ICollection<CommentEntity> Comments { get; set; } = new List<CommentEntity>();
 
         public Errand()
         {
-     
             Status = ErrandStatus.NotStarted;
         }
 
