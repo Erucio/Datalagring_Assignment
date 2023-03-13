@@ -8,6 +8,8 @@ namespace Datalagring_Assignment.Services
     internal class ErrandService
     {
         private static DataContext _context = new DataContext();
+
+        #region Save
         public static async Task SaveAsync(Errand errand)
         {
             var _errandEntity = new ErrandEntity
@@ -46,8 +48,9 @@ namespace Datalagring_Assignment.Services
             _context.Add(_errandEntity);
             await _context.SaveChangesAsync();
         }
+        #endregion
 
-
+        #region Get All
         public static async Task<IEnumerable<Errand>> GetAllAsync()
         {
             var _errands = await _context.Errands
@@ -73,10 +76,9 @@ namespace Datalagring_Assignment.Services
                 }).ToList()
             });
         }
+        #endregion
 
-
-
-
+        #region Get Specific 
         public static async Task<Errand> GetAsync(int id)
         {
             var _errand = await _context.Errands
@@ -106,6 +108,10 @@ namespace Datalagring_Assignment.Services
             else
                 return null!;
         }
+
+        #endregion
+
+        #region Update
         public static async Task UpdateAsync(Errand errand)
         {
             var _errandEntity = await _context.Errands.Include(x => x.Customer).FirstOrDefaultAsync(x => x.Id == errand.Id);
@@ -120,7 +126,9 @@ namespace Datalagring_Assignment.Services
                 await _context.SaveChangesAsync();
             }
         }
+        #endregion
 
+        #region Delete
         public static async Task DeleteAsync(int id)
         {
             var _errand = await _context.Errands.Include(x => x.Customer).FirstOrDefaultAsync(x => x.Id == id && x.Status == 3);
@@ -131,10 +139,9 @@ namespace Datalagring_Assignment.Services
             }
         }
 
+        #endregion
 
-
-
-        // ADD COMMENT....
+        #region Add Comment
         public static async Task AddCommentAsync(int errandId, string comment)
         {
             var _errandEntity = await _context.Errands.FindAsync(errandId);
@@ -153,6 +160,7 @@ namespace Datalagring_Assignment.Services
 
             }
         }
+        #endregion
 
 
     }

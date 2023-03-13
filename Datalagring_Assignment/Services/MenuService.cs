@@ -6,33 +6,37 @@ namespace Datalagring_Assignment.Services
     internal class MenuService
     {
 
+        #region Create Errand
 
         public async Task CreateNewErrandAsync()
         {
             var errand = new Errand();
 
-            Console.WriteLine("Insert Full Customer Name");
+            Console.WriteLine("Insert Full Customer Name:");
             errand.CustomerName = Console.ReadLine() ?? "";
 
-            Console.WriteLine("Insert Customer Phone Number");
+            Console.WriteLine("Insert Customer Phone Number:");
             errand.Phone = Console.ReadLine() ?? "";
 
 
-            Console.WriteLine("Insert Customer E-mail Address");
+            Console.WriteLine("Insert Customer E-mail Address:");
             errand.Email = Console.ReadLine() ?? "";
 
 
-            Console.WriteLine("Describe Your Error");
+            Console.WriteLine("Errand Description:");
             errand.Description = Console.ReadLine() ?? "";
 
             errand.ErrandDateTime = DateTime.Now;
-            Console.WriteLine("Errand Created");
+            Console.WriteLine("Errand Created:");
 
 
             //Save errand to database
             await ErrandService.SaveAsync(errand);
 
         }
+        #endregion
+
+        #region Show All Errands
         public async Task ListAllErrandsAsync()
         {
             var errands = await ErrandService.GetAllAsync();
@@ -67,6 +71,9 @@ namespace Datalagring_Assignment.Services
                 Console.WriteLine("");
             }
         }
+        #endregion
+
+        #region Show Specific Errand
         public async Task ListSpecificErrandAsync()
         {
             Console.WriteLine("Input Errand ID: ");
@@ -112,7 +119,9 @@ namespace Datalagring_Assignment.Services
                 Console.WriteLine("");
             }
         }
+        #endregion
 
+        #region Update Errand
         public async Task UpdateSpecificErrandAsync()
         {
             Console.WriteLine("Input The Errand ID You Would Like To Update: ");
@@ -166,6 +175,10 @@ namespace Datalagring_Assignment.Services
                 Console.WriteLine("");
             }
         }
+
+        #endregion
+
+        #region Delete
         public async Task DeleteSpecificErrandAsync()
         {
             Console.WriteLine("Input The ID of the Errand you would like to Delete:");
@@ -193,6 +206,7 @@ namespace Datalagring_Assignment.Services
                 Console.WriteLine($"No Errand Found with ID {id}...");
             }
         }
+        #endregion
     }
 }
 

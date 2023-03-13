@@ -1,5 +1,4 @@
 ﻿using Datalagring_Assignment.Services;
-
 var menu = new MenuService();
 
 while (true)
@@ -30,13 +29,9 @@ while (true)
             await menu.DeleteSpecificErrandAsync();
             break;
 
-
-
         default:
             Console.WriteLine("Please Input Command 1-5");
             break;
-
-
     }
     Console.WriteLine("Press a key to continue...");
     Console.ReadKey();
