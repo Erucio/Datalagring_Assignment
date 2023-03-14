@@ -11,7 +11,7 @@ namespace Datalagring_Assignment.Services
         public async Task CreateNewErrandAsync()
         {
             var errand = new Errand();
-
+            Console.Clear();
             Console.WriteLine("Insert Full Customer Name:");
             errand.CustomerName = Console.ReadLine() ?? "";
 
@@ -45,6 +45,7 @@ namespace Datalagring_Assignment.Services
             {
                 foreach (Errand errand in errands)
                 {
+                    Console.Clear();
                     Console.WriteLine($"Errand ID: {errand.Id}");
                     Console.WriteLine($"Customer Name: {errand.CustomerName}");
                     Console.WriteLine($"Customer Phone: {errand.Phone}, Customer Email: {errand.Email}");
@@ -87,6 +88,7 @@ namespace Datalagring_Assignment.Services
 
                 if (errand != null)
                 {
+                    Console.Clear();
                     Console.WriteLine($"Errand ID: {errand.Id}");
                     Console.WriteLine($"Customer Name: {errand.CustomerName}");
                     Console.WriteLine($"Customer Phone: {errand.Phone}, Customer Email: {errand.Email}");
@@ -132,6 +134,22 @@ namespace Datalagring_Assignment.Services
 
             if (errand != null)
             {
+                //Change Status
+                Console.Clear();
+                Console.WriteLine("Select Errand Status:\n1. Not Started \n2. In Progress\n3. Completed");
+
+                Console.WriteLine("Status: ");
+
+                ErrandStatus status;
+                if (Enum.TryParse(Console.ReadLine(), out status) && Enum.IsDefined(typeof(ErrandStatus), status))
+                {
+                    errand.Status = status;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid Input...");
+                }
+
                 //Add comment?
                 Console.Clear();
                 Console.WriteLine("Would You Like To Add A Comment To This Errand? (Y/N)");
@@ -145,25 +163,7 @@ namespace Datalagring_Assignment.Services
                     await ErrandService.AddCommentAsync(errand.Id, comment);
 
                     Console.WriteLine("Comment Added...");
-                    Console.Clear() ;
-                }
-
-
-                //Change Status
-
-
-                Console.WriteLine("Select Errand Status:\n1. Not Started \n2. In Progress\n3. Completed");
-
-                Console.WriteLine("Status: ");
-
-                ErrandStatus status;
-                if (Enum.TryParse(Console.ReadLine(), out status) && Enum.IsDefined(typeof(ErrandStatus), status))
-                {
-                    errand.Status = status;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid Input...");
+                    Console.Clear();
                 }
 
                 await ErrandService.UpdateAsync(errand);
@@ -193,6 +193,7 @@ namespace Datalagring_Assignment.Services
 
                 if ((int)errand.Status == 3)
                 {
+                    Console.Clear();
                     await ErrandService.DeleteAsync(id);
                     Console.WriteLine("Errand Deleted");
                 }
